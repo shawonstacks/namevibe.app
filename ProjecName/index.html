@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Name Vibe Generator - নামের গোপন রহস্য</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Hind Siliguri & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- html2canvas for Image Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- canvas-confetti for celebration effects -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- QRCode.js for generating QR code on card -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'Hind Siliguri', 'sans-serif'],
+                        bn: ['Hind Siliguri', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Hind Siliguri', 'Outfit', sans-serif;
+        }
+
+        /* Card Custom Themes */
+        .theme-cyber {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            border-color: #818cf8;
+        }
+        .theme-royal {
+            background: linear-gradient(135deg, #2e1065 0%, #3b0764 50%, #581c87 100%);
+            border-color: #c084fc;
+        }
+        .theme-sunset {
+            background: linear-gradient(135deg, #451a03 0%, #78350f 50%, #831843 100%);
+            border-color: #f97316;
+        }
+        .theme-emerald {
+            background: linear-gradient(135deg, #064e3b 0%, #022c22 50%, #0f172a 100%);
+            border-color: #34d399;
+        }
+
+        /* Card Glow */
+        .card-glow {
+            box-shadow: 0 0 35px -5px rgba(99, 102, 241, 0.25);
+        }
+
+        /* Animations */
+        @keyframes popIn {
+            0% { transform: scale(0.92); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop-in {
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header -->
+    <header class="w-full border-b border-slate-800 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center font-extrabold text-xl shadow-lg shadow-indigo-500/30">
+                    ✨
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-none tracking-wide text-white">NameVibe</h1>
+                    <span class="text-xs text-indigo-400 font-medium">নামের ভেতরের গোপন রহস্য</span>
+                </div>
+            </div>
+            <div class="text-xs bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 px-3 py-1.5 rounded-full font-medium flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> ১৫,৫০০+ জেনারেট হয়েছে
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-4xl mx-auto px-4 py-8 flex-1 w-full flex flex-col items-center">
+        
+        <!-- Hero Title -->
+        <div class="text-center max-w-xl mb-8">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-pink-400 text-xs font-semibold uppercase tracking-wider mb-3">
+                🔥 ভাইরাল ফেসবুক ফান টুল 2.0
+            </span>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-3 leading-tight">
+                আপনার নামের প্রতিটি অক্ষরের আসল ভাইব কী?
+            </h2>
+            <p class="text-slate-400 text-sm md:text-base">
+                ছবি বা এভাটার যুক্ত করে আপনার বা বন্ধুর নামের মজার ভাইব কার্ড জেনারেট করুন!
+            </p>
+        </div>
+
+        <!-- Input Box Section -->
+        <div class="w-full max-w-md bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-2xl mb-10 card-glow">
+            <form id="vibeForm" onsubmit="generateVibe(event)" class="space-y-5">
+                
+                <!-- Name Input -->
+                <div>
+                    <label for="userName" class="block text-sm font-semibold text-slate-300 mb-1.5">
+                        ইংরেজি নাম লিখুন (Ex: RAHIM, SIMA)
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="userName" maxlength="12" required placeholder="এখানে নাম লিখুন..."
+                            class="w-full bg-slate-950 border border-slate-700 focus:border-indigo-500 rounded-xl px-4 py-3 text-lg font-bold tracking-wider text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 transition-all uppercase">
+                        <span class="absolute right-3 top-3.5 text-xs text-slate-500 font-sans" id="charCount">0/12</span>
+                    </div>
+                </div>
+
+                <!-- Mode / Vibe Selector -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">
+                        মোড সিলেক্ট করুন:
+                    </label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" onclick="setMode('good')" id="mode-good" 
+                            class="mode-btn border border-indigo-500/50 bg-indigo-950/60 text-indigo-200 py-2.5 px-2 rounded-xl text-xs font-bold flex flex-col items-center gap-1 transition-all shadow-sm">
+                            <span class="text-lg">😇</span>
+                            <span>প্রশংসা মোড</span>
+                        </button>
+                        <button type="button" onclick="setMode('roast')" id="mode-roast" 
+                            class="mode-btn border border-slate-700 bg-slate-950/60 text-slate-400 py-2.5 px-2 rounded-xl text-xs font-bold flex flex-col items-center gap-1 transition-all opacity-70 hover:opacity-100">
+                            <span class="text-lg">😈</span>
+                            <span>রোস্ট/ফান</span>
+                        </button>
+                        <button type="button" onclick="setMode('love')" id="mode-love" 
+                            class="mode-btn border border-slate-700 bg-slate-950/60 text-slate-400 py-2.5 px-2 rounded-xl text-xs font-bold flex flex-col items-center gap-1 transition-all opacity-70 hover:opacity-100">
+                            <span class="text-lg">💖</span>
+                            <span>রোমান্টিক</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Avatar / Photo Upload Selector -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">
+                        প্রোফাইল ছবি বা এভাটার বেছে নিন:
+                    </label>
+                    
+                    <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                        <!-- Custom Photo Upload Button -->
+                        <label class="w-11 h-11 rounded-full border-2 border-dashed border-indigo-400 hover:border-indigo-300 bg-indigo-950/40 hover:bg-indigo-900/50 cursor-pointer flex flex-col items-center justify-center shrink-0 transition-all text-indigo-300" title="নিজের ছবি আপলোড করুন">
+                            <i class="fa-solid fa-camera text-sm"></i>
+                            <input type="file" id="photoInput" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
+                        </label>
+                        
+                        <!-- Emoji Avatars -->
+                        <button type="button" onclick="selectAvatar('😎')" class="avatar-option w-11 h-11 rounded-full border-2 border-indigo-500 bg-slate-800 text-xl flex items-center justify-center shrink-0 hover:scale-105 transition-all">😎</button>
+                        <button type="button" onclick="selectAvatar('👑')" class="avatar-option w-11 h-11 rounded-full border-2 border-transparent hover:border-slate-600 bg-slate-800 text-xl flex items-center justify-center shrink-0 hover:scale-105 transition-all">👑</button>
+                        <button type="button" onclick="selectAvatar('🔥')" class="avatar-option w-11 h-11 rounded-full border-2 border-transparent hover:border-slate-600 bg-slate-800 text-xl flex items-center justify-center shrink-0 hover:scale-105 transition-all">🔥</button>
+                        <button type="button" onclick="selectAvatar('🐱')" class="avatar-option w-11 h-11 rounded-full border-2 border-transparent hover:border-slate-600 bg-slate-800 text-xl flex items-center justify-center shrink-0 hover:scale-105 transition-all">🐱</button>
+                        <button type="button" onclick="selectAvatar('🍕')" class="avatar-option w-11 h-11 rounded-full border-2 border-transparent hover:border-slate-600 bg-slate-800 text-xl flex items-center justify-center shrink-0 hover:scale-105 transition-all">🍕</button>
+                        <button type="button" onclick="selectAvatar('❤️')" class="avatar-option w-11 h-11 rounded-full border-2 border-transparent hover:border-slate-600 bg-slate-800 text-xl flex items-center justify-center shrink-0 hover:scale-105 transition-all">❤️</button>
+                    </div>
+                </div>
+
+                <button type="submit" id="generateBtn"
+                    class="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-indigo-500/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-base">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> রহস্য উন্মোচন করুন
+                </button>
+            </form>
+        </div>
+
+        <!-- Result Output Card Area -->
+        <div id="resultSection" class="w-full max-w-lg hidden animate-pop-in">
+            
+            <!-- Theme Selector -->
+            <div class="flex items-center justify-between mb-4 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+                <span class="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-palette text-indigo-400"></i> থিম বেছে নিন:
+                </span>
+                <div class="flex items-center gap-2">
+                    <button onclick="changeTheme('theme-cyber')" class="w-7 h-7 rounded-full bg-indigo-900 border-2 border-indigo-400 focus:outline-none transition-transform hover:scale-110" title="Cyber Dark"></button>
+                    <button onclick="changeTheme('theme-royal')" class="w-7 h-7 rounded-full bg-purple-900 border-2 border-purple-400 focus:outline-none transition-transform hover:scale-110" title="Royal Purple"></button>
+                    <button onclick="changeTheme('theme-sunset')" class="w-7 h-7 rounded-full bg-amber-900 border-2 border-amber-400 focus:outline-none transition-transform hover:scale-110" title="Sunset Orange"></button>
+                    <button onclick="changeTheme('theme-emerald')" class="w-7 h-7 rounded-full bg-emerald-900 border-2 border-emerald-400 focus:outline-none transition-transform hover:scale-110" title="Emerald Chill"></button>
+                </div>
+            </div>
+
+            <!-- The Downloadable Canvas Card Container -->
+            <div id="vibeCard" class="theme-cyber border-2 rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-2xl transition-all duration-300">
+                
+                <!-- Background Decorative Element -->
+                <div class="absolute -right-12 -top-12 w-40 h-40 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute -left-12 -bottom-12 w-40 h-40 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+                <!-- Card Header -->
+                <div class="text-center border-b border-white/10 pb-5 mb-6 flex flex-col items-center">
+                    
+                    <!-- Avatar / Uploaded Photo Frame -->
+                    <div id="cardAvatarContainer" class="w-16 h-16 rounded-full bg-indigo-500/20 border-2 border-indigo-400/60 flex items-center justify-center text-3xl mb-2 shadow-lg overflow-hidden shrink-0">
+                        <span id="cardAvatarEmoji">😎</span>
+                        <img id="cardAvatarImage" class="w-full h-full object-cover hidden" alt="Profile">
+                    </div>
+
+                    <span id="modeBadge" class="text-xs font-bold tracking-widest text-pink-400 uppercase bg-pink-500/10 px-3 py-1 rounded-full border border-pink-500/20 mt-1">
+                        😇 GOOD PERSONALITY VIBE
+                    </span>
+                    <h3 id="cardNameDisplay" class="text-3xl md:text-4xl font-extrabold text-white mt-2 tracking-wide uppercase drop-shadow-md">
+                        SAKIB
+                    </h3>
+                </div>
+
+                <!-- Meaning List -->
+                <div id="vibeList" class="space-y-3 mb-6">
+                    <!-- Dynamic List Items will be injected here -->
+                </div>
+
+                <!-- Card Footer Branding & Dynamic QR Code -->
+                <div class="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
+                    <div class="flex flex-col gap-0.5">
+                        <div class="flex items-center gap-1.5 font-bold text-slate-200">
+                            <span class="w-2 h-2 rounded-full bg-pink-500"></span> NameVibe.app
+                        </div>
+                        <span class="text-[10px] text-slate-400 opacity-80">scan QR to check your name!</span>
+                    </div>
+
+                    <!-- Dynamic QR Code Container -->
+                    <div class="bg-white p-1 rounded-md shadow-md shrink-0 flex items-center justify-center">
+                        <div id="qrcode"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons Grid -->
+            <div class="grid grid-cols-3 gap-2.5 mt-5">
+                <button onclick="downloadCard()" id="downloadBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-2 rounded-xl shadow-lg transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm">
+                    <i class="fa-solid fa-download"></i> ইমেজে ডাউনলোড
+                </button>
+                <button onclick="shareToFacebook()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-2 rounded-xl shadow-lg transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm">
+                    <i class="fa-brands fa-facebook"></i> ফেসবুকে শেয়ার
+                </button>
+                <button onclick="shareLink()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-3 px-2 rounded-xl border border-slate-700 transition-all flex items-center justify-center gap-1.5 text-xs sm:text-sm">
+                    <i class="fa-solid fa-share-nodes"></i> লিঙ্ক কপি
+                </button>
+            </div>
+
+            <!-- Toast Notification -->
+            <div id="toast" class="mt-3 text-center text-xs text-emerald-400 bg-emerald-950/80 border border-emerald-800/80 rounded-lg py-2 hidden transition-all">
+                ✅ লিঙ্ক ক্লিপবোর্ডে কপি হয়েছে!
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full border-t border-slate-800/80 py-6 text-center text-xs text-slate-500">
+        <p>© 2026 NameVibe Generator • সম্পূর্ণ বিনোদনের জন্য তৈরি</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // State management
+        let currentMode = 'good'; // 'good', 'roast', 'love'
+        let selectedAvatarType = 'emoji'; // 'emoji' or 'photo'
+        let selectedAvatarValue = '😎';
+
+        // Expanded Dictionary with 3 Modes (Good, Roast, Love)
+        const vibeDictionaries = {
+            good: {
+                'A': ["Awesome - মনটা চরম উদার", "Always Friendly - বন্ধুদের প্রিয় পাত্র", "Attitude Boss - কাজের বেলায় একশো"],
+                'B': ["Biryani Lover - বিরিয়ানির গন্ধে ব্যাকুল", "Brainy Boss - মাথায় পজিটিভ বুদ্ধি ভরপুর", "Bold Soul - সাহসের অভাব নেই"],
+                'C': ["Cute & Innocent - মিষ্টি ব্যবহারের অধিকারী", "Chill Person - কোন ঝামেলা পছন্দ করে না", "Creative Mind - নতুন কিছু করতে ভালোবাসে"],
+                'D': ["Dreamer - বড় স্বপ্নের সন্ধানে থাকে", "Dedicated - যেকোনো কাজে মনপ্রাণ সঁপে দেয়", "Dynamic - চটপটে ব্যক্তিত্ব"],
+                'E': ["Energetic - উদ্দীপনার শেষ নেই", "Extra Talented - সুপ্ত গুণাবলীতে ভরা", "Emotional Heart - নরম মনের মানুষ"],
+                'F': ["Foodie Master - খাবারের ভক্ত", "Friendship Goal - বন্ধুত্বের জন্য সেরা", "Funny Character - আড্ডা জমিয়ে রাখে"],
+                'G': ["Generous - সবার উপকারে রাজি", "Gamer - গেমিং এ অসম্ভব পারদর্শী", "Great Heart - বড় মনের অধিকারী"],
+                'H': ["Helpful Soul - বিপদে সবার আগে হাজির", "Heart Breaker - চেহারাতেই ক্রাশের চমক", "Happy Soul - সর্বদা হাসিখুশি"],
+                'I': ["Innocent Look - নিষ্পাপ চাহনি", "Idea Machine - দারুণ আইডিয়ার খনি", "Intelligent - বুদ্ধিতে বেশ শক্তপোক্ত"],
+                'J': ["Joss Mood - মেজাজ সবসময় চাঙ্গা", "Joker of Gang - হাসাতে হাসাতে পেট ব্যথা করায়", "Joyful - আনন্দ ছড়িয়ে দিতে ভালোবাসে"],
+                'K': ["Kind Hearted - দয়ালু ও সহনশীল", "King/Queen Vibe - রাজকীয় হাবভাব", "Keen Learner - নতুন কিছু দ্রুত শেখে"],
+                'L': ["Loyal Partner - বিশ্বস্ত ও সততার প্রতীক", "Lazy Genius - বুদ্ধিমান কিন্তু চিলপ্রিয়", "Lovely Personality - আকর্ষণীয় স্বভাব"],
+                'M': ["Meme Expert - মজার ছলে সবাইকে হাসায়", "Moody Star - মেজাজ রাজা বাদশার মতো", "Money Minded - হিসাব-নিকাশে সেরা"],
+                'N': ["Naughty & Cute - মিষ্টি দুষ্টুমিতে ভরা", "Nature Lover - শান্ত পরিবেশে ভালোবাসে", "Never Gives Up - হার মানে না কখনো"],
+                'O': ["One in a Million - লাখের মধ্যে একজন", "Open Minded - স্পষ্টভাষী ও খাঁটি", "Optimistic - সবসময় পজিটিভ ভাবে"],
+                'P': ["Pure Soul - মনে কোন হিংসা নেই", "Photogenic - ছবিতে দারুণ লাগে", "Peace Lover - শান্তি ভালোবাসে"],
+                'Q': ["Queen/King Style - নিজের খেয়ালে চলে", "Quick Learner - এক দেখাতেই শিখে যায়", "Quiet Mind - চুপচাপ বুদ্ধিমান"],
+                'R': ["Really Talented - প্রতিভার শেষ নেই", "Romantic Star - মিষ্টি প্রেমের স্বভাব", "Risk Taker - সাহসী সিদ্ধান্ত নেয়"],
+                'S': ["Smart Worker - কম পরিশ্রমে সেরা ফল", "Sleep Lover - ঘুমই যার শান্তির জায়গা", "Selfie Expert - পোজ দিতে ওস্তাদ"],
+                'T': ["True Friend - বিপদের আসল সঙ্গী", "Tea Addict - চায়ের কাপে সব সমাধান", "Talkative - চমৎকার গল্প করতে পারে"],
+                'U': ["Unique Style - ফ্যাশনে আলাদা স্থান", "Understanding - অনুভূতির কদর বোঝে", "Unstoppable - লক্ষ্য অর্জনে অটল"],
+                'V': ["VIP Look - সবসময় প্রিমিয়াম ভাব", "Victory Seeker - জয়ের স্বপ্ন দেখে", "Vibrant - যেখানেই যাক আলো ছড়ায়"],
+                'W': ["Winning Heart - সহজেই সবার মন জয় করে", "Workaholic - নিজের কাজ নিয়ে ব্যস্ত থাকে", "Wise Person - বিজ্ঞ পরামর্শদাতা"],
+                'X': ["X-Factor - আলাদা এক স্পেশাল আকর্ষণী ক্ষমতা", "Xtra Smart - সব পরিস্থিতিতে বুদ্ধি কাজে লাগায়"],
+                'Y': ["Young Heart - মনে সবসময় তারুণ্যের ছোঁয়া", "YouTuber Vibe - অসাধারণ প্রেজেন্টেশন"],
+                'Z': ["Zero Tension - প্যারা ছাড়া জীবন পার করে", "Zonal Boss - নিজস্ব এলাকায় বিশেষ মান্য"]
+            },
+            roast: {
+                'A': ["Always Single - ভালোবাসার বাজারে চরম খরা", "Attitude Master - ভাব মারে বেশি, কাজ করে কম", "Alos Max - অলসতার নোবেল বিজয়ী"],
+                'B': ["Bulaikhor - কথা দিয়ে কথা রাখার নামগন্ধ নেই", "Bhabu King - অকারণেই আকাশকুসুম চিন্তা করে", "Bkash Seeker - সবসময় ধার চাওয়ার ধান্দা"],
+                'C': ["Crazy Monster - মাথায় ছিট একটু বেশিই", "Chorai Mind - সবসময় শর্টকাট খুঁজতে যায়", "Cheap Drama - বিনা কারণে সিরিয়াল ড্রামা বানায়"],
+                'D': ["Danger Zone - এর সাথে থাকা মানেই বিপদে পড়া", "Drama Master - কথা না বানিয়ে পেটের ভাত হজম হয় না", "Debater - কুযুক্তি দিতে ওস্তাদ"],
+                'E': ["Emotional Fool - ফালতু কথায় পপকর্ন খেয়ে কাঁদে", "Extra Pera - বন্ধুদের অমূল্য সময় নষ্ট করে", "Ex Expper - এক্স এর স্মৃতিতে মগ্ন থাকে"],
+                'F': ["Fakibaz - কাজের কথা শুনলেই গা ঢাকা দেয়", "Food Snatcher - অন্যের টিফিন আগে শেষ করে", "Fake Flex - চাপা মারায় ওয়ার্ল্ড রেকর্ড"],
+                'G': ["Gossip Machine - পাড়ার সব খবরের দোকান", "Ghum Pagol - ঘুমিয়েই অর্ধেক জীবন পার", "Ghyang Ghyang - কথায় কথায় নালিশ করে"],
+                'H': ["Hablu Boss - সহজ জিনিসও পঁচিশবার বোঝাতে হয়", "Heavy Peradoyok - যার কাছে যাবে তাকেই প্যারা দেবে", "Hypocrite - মুখে ভালো, পেছনে জালি"],
+                'I': ["Innocent Drama - সাধু সাজতে এরা সেরা", "Internet Addict - রিলস দেখেই দিন পার", "Irritating - এক মিনিট থাকলে বিরক্ত লাগবে"],
+                'J': ["Jhal Khor - ঝগড়া না লাগালে ঘুম আসে না", "Joker Unfiltered - নিজের কৌতুকে নিজেই হাসে", "Jealous Master - বন্ধুদের সুখে হিংসায় জ্বলে"],
+                'K': ["Kanjus Extreme - চা খেলেও মানিব্যাগ খুঁজে পায় না", "Khela Hobena - গেমে নামলেই সবার আগে মরে", "Kachchi chor - বিরিয়ানির মাংস চুরি করে খায়"],
+                'L': ["Late Latif - যেখানেই যাক ২ ঘণ্টা পর পৌঁছাবে", "Liar League - বান বানিয়ে কথা বলায় চ্যাম্পিয়ন", "Lada Master - বিছানা ছেড়ে ওঠা অসম্ভব"],
+                'M': ["Mukhfuto - পেটে কোন গোপন কথা থাকে না", "Master Minded - বাঁশ দিতে এরা এক নম্বর", "Moody Bhoot - কখন রাগ করবে কেউ জানে না"],
+                'N': ["Nautanki - অভিনয়ে অস্কার পাওয়া উচিত", "Nogor Niyontrok - অন্যের বিষয়ে নাক গলায়", "Night Owl - সারারাত জেগে মিম দেখে"],
+                'O': ["Overthinker - মশা কামড়ালেও ডেঙ্গুর ভয় পায়", "Offline Ghost - মেসেজ দেখেও রিপ্লাই দেয় না", "Over Smart - বেশি বুঝতে গিয়ে ধরা খায়"],
+                'P': ["Pera Unlimited - মাথায় শুধু গ্যাঞ্জাম ঘোরে", "Photo Thief - অন্যের ছবি চুরি করে পোস্ট দেয়", "Puti Mach - ড্যাশিং ভাব নেয় কিন্তু ভীতু"],
+                'Q': ["Quarrel Lover - ঝগড়ার সুযোগ খোঁজে", "Question Bank - ফালতু প্রশ্নে মাথা নষ্ট করে", "Quiet Satan - বাইরে শান্ত, ভেতরে শয়তান"],
+                'R': ["Ragi Bhoot - হুটহাট রাগ ওঠায় ওস্তাদ", "Roast Magnet - ফ্রেন্ড সার্কেলে সারাদিন পঁচে", "Risk Marker - ফালতু ঝুঁকিতে গিয়ে বাঁশ খায়"],
+                'S': ["Selfish King - নিজের স্বার্থ ছাড়া এক পা চলে না", "Stalker - সবার প্রোফাইলে নজরদারি চালায়", "Sly Fox - অতিচালাকের গলায় দড়ি"],
+                'T': ["Talkative Pabla - এর মুখ বন্ধ করা অসম্ভব", "Time Pass - কাজে কর্মে মন নেই", "Tension Giver - পরিবারকে টেনশন দিতে ওস্তাদ"],
+                'U': ["Unpredictable Pabla - কখন কি কেলো করবে ঠিক নেই", "Ulu Biki - যা বলে তার কোনো অর্থ নেই", "Unlucky - লটারিতে ১ টাকাও পায় না"],
+                'V': ["Vondo - মুখে নীতি কথা, কাজে উল্টো", "Vaja Mach - না চেনার ভান করে সুযোগ নেয়", "Voboghure - রাস্তায় রাস্তায় টো টো করে ঘোরে"],
+                'W': ["Wrong Decision - ভুল সিদ্ধান্ত নেওয়ায় বিশেষজ্ঞ", "Wifi Chor - অন্যের ওয়াইফাই কানেক্ট করে রাখে", "Wild Monkey - হুটহাট বাঁদরামো শুরু করে"],
+                'X': ["Xerox Machine - অন্যের স্টাইল কপি করে", "Xtra Pera - সবসময় ঝামেলা পাকায়"],
+                'Y': ["Yo Yo Fails - কুল সাজতে গিয়ে পঁচে যায়", "Yak Yak - পচা পচা কৌতুক বলে"],
+                'Z': ["Zombie - চোখের নিচে ডার্ক সার্কেল নিয়ে ঘোরে", "Zero IQ - সাধারণ কমন সেন্সও কম"]
+            },
+            love: {
+                'A': ["Affectionate - বুক ভরা ভালোবাসা", "Always Caring - ভালোবাসার যত্নে অতুলনীয়", "Angel Heart - দেবদূতের মতো পবিত্র মন"],
+                'B': ["Beloved Soul - যাকে দেখলে মন জুড়িয়ে যায়", "Beautiful Heart - ভেতরের সৌন্দর্যই আসল", "Bond Lover - বন্ধন শক্ত রাখতে জানে"],
+                'C': ["Caring Eyes - চাহনিতে শুধু ভালোবাসা", "Charming - প্রথম দেখাতেই প্রেমে পড়ার মতো", "Cute Smile - মিষ্টি হাসিতে মন জয় করে"],
+                'D': ["Darling - সবার হৃদয়ের আদুরে মানুষ", "Dream Partner - স্বপ্নে দেখা রাজকুমার/রাজকুমারী", "Devoted - প্রেমে নিঃশর্ত অনুগত"],
+                'E': ["Empathic - মনের দুঃখ বুঝতে পারে", "Everlasting Love - চিরস্থায়ী ভালোবাসায় বিশ্বাসী", "Emotional Connection - গভীর অনুভূতির বন্ধন"],
+                'F': ["Forever Lover - সারাজীবন পাশে থাকার মতো", "Faithful - সুখে-দুঃখে বিশ্বস্ত সঙ্গী", "Fluffy Heart - নরম ও কোমল মনের মানুষ"],
+                'G': ["Gentle Soul - নম্র ও মার্জিত স্বভাব", "Golden Heart - সোনায় বাঁধানো ভালোবাসা", "Guardian - সবসময় ছায়ার মতো আগলে রাখে"],
+                'H': ["Heart Stealer - অজান্তেই মন চুরি করে নেয়", "Hug Specialist - উষ্ণ জড়ানোয় শান্তির ছোঁয়া", "Honest Love - খাঁটি ভালোবাসার প্রতীক"],
+                'I': ["Infinite Care - সীমাহীন ভালোবাসার আধার", "Innocent Heart - সরল প্রেমের প্রতিচ্ছবি", "Inspirational - ভালোবাসায় শক্তি যোগায়"],
+                'J': ["Joy of Life - জীবনে বেঁচে থাকার আসল আনন্দ", "Jealousy Cute - কিউট হিংসা দিয়ে প্রেম প্রকাশ করে", "Juliet/Romeo Vibe - ভালোবাসার গল্প তৈরি করে"],
+                'K': ["Kissable Smile - মোহিত করার মতো হাসি", "Kind Red - হৃদয়ে ভালোবাসার রক্তধারা", "Keep Holding - হাত ধরে পাশে থাকে"],
+                'L': ["Love Magnet - সবাইকে ভালোবাসায় টেনে নেয়", "Loyal Heart - যার সাথে থাকবে তার একারই", "Lover Boy/Girl - অনুভূতির সাগরে ডোবে"],
+                'M': ["Melody of Heart - হৃদয়ের মিষ্টি সুর", "Magical Touch - স্পর্শেই মন ভালো হয়ে যায়", "Moonlight - জোছনার মতো স্নিগ্ধ ছোঁয়া"],
+                'N': ["Nurturing - সম্পর্কের খেয়াল রাখতে সেরা", "Name on Heart - মনে খোদাই করা ভালোবাসা", "Never Alone - একা হতে দেবে না কখনো"],
+                'O': ["One & Only - একজনের জন্যই ডেডিকেটেড", "Overly Caring - একটু বেশিই যত্ন নেয়", "Open Heart - ভালোবাসায় কোনো লুকোচুরি নেই"],
+                'P': ["Pure Heart - কোনো খাদ নেই যার প্রেমে", "Precious Pearl - মূল্যবান রত্নের মতো ভালোবাসার মানুষ", "Protecting Angel - সবসময় রক্ষা করে"],
+                'Q': ["Queen/King of Hearts - মনের সিংহাসনের মালিক", "Quietly Loving - নিরবে ভালোবেসে যায়", "Quality Time - সুন্দর মুহূর্ত তৈরিতে সেরা"],
+                'R': ["Romantic Soul - ক্যান্ডেল লাইট ডিনারের স্বপ্ন দেখে", "Rose Heart - গোলাপের মতো সুন্দর অনুভূতি", "Real Gem - এই যুগে মেলা ভার"],
+                'S': ["Sweetheart - মিষ্টি স্বভাবের পরাণ পাখি", "Soulmate Material - নিখুঁত জীবনসঙ্গী হওয়ার যোগ্য", "Soft Hearted - ভালোবাসার কথায় গলে যায়"],
+                'T': ["True Love - খাঁটি অনুভূতির পরিচয়", "Tender Touch - মায়াবী ছোঁয়া", "Together Forever - একসাথে বুড়ো হওয়ার স্বপ্ন দেখে"],
+                'U': ["Unconditional Love - কোনো শর্ত ছাড়াই ভালোবাসে", "Unforgettable - যাকে ভুলা অসম্ভব", "Understand Love - না বলা কথা বুঝে ফেলে"],
+                'V': ["Valentine Vibe - হৃদয়ে চিরবসন্তের ছোঁয়া", "Valuable Soul - জীবনের সবচেয়ে বড় সম্পদ", "Voice of Peace - কণ্ঠ শুনলেই মন শান্ত হয়"],
+                'W': ["Warm Heart - ভালোবাসার উষ্ণ ছোঁয়া", "World's Best - সেরা ভালোবাসার মানুষ", "Wish Fulfilled - স্বপ্নের মতো সুন্দর বন্ড"],
+                'X': ["Xtra Loving - অপরিসীম ভালোবাসার অধিকারিনী", "Xquisite - অসাধারণ ভালোবাসার অনুভুতি"],
+                'Y': ["Yours Forever - শুধুই আপনার হয়ে থাকার মানসিকতা", "Yearning Heart - ভালোবাসার খোঁজে ব্যাকুল"],
+                'Z': ["Zest of Love - ভালোবাসায় উচ্ছ্বাসে ভরা", "Zero Regrets - ভালোবাসায় কোনো আফসোস রাখে না"]
+            }
+        };
+
+        // DOM elements
+        const userNameInput = document.getElementById('userName');
+        const charCount = document.getElementById('charCount');
+        const cardAvatarEmoji = document.getElementById('cardAvatarEmoji');
+        const cardAvatarImage = document.getElementById('cardAvatarImage');
+
+        // Character counter logic
+        userNameInput.addEventListener('input', (e) => {
+            const length = e.target.value.length;
+            charCount.textContent = `${length}/12`;
+            e.target.value = e.target.value.replace(/[^a-zA-Z]/g, '');
+        });
+
+        // Set Mood/Vibe mode
+        function setMode(mode) {
+            currentMode = mode;
+            const buttons = ['good', 'roast', 'love'];
+            buttons.forEach(b => {
+                const btn = document.getElementById(`mode-${b}`);
+                if (b === mode) {
+                    btn.className = "mode-btn border border-indigo-500/80 bg-indigo-950 text-indigo-200 py-2.5 px-2 rounded-xl text-xs font-bold flex flex-col items-center gap-1 transition-all shadow-md scale-105";
+                } else {
+                    btn.className = "mode-btn border border-slate-700 bg-slate-950/60 text-slate-400 py-2.5 px-2 rounded-xl text-xs font-bold flex flex-col items-center gap-1 transition-all opacity-70 hover:opacity-100";
+                }
+            });
+        }
+
+        // Select Avatar Emoji
+        function selectAvatar(emoji) {
+            selectedAvatarType = 'emoji';
+            selectedAvatarValue = emoji;
+            cardAvatarEmoji.textContent = emoji;
+            cardAvatarEmoji.classList.remove('hidden');
+            cardAvatarImage.classList.add('hidden');
+
+            // Highlight chosen option
+            document.querySelectorAll('.avatar-option').forEach(btn => {
+                if (btn.textContent === emoji) {
+                    btn.classList.add('border-indigo-500');
+                    btn.classList.remove('border-transparent');
+                } else {
+                    btn.classList.remove('border-indigo-500');
+                    btn.classList.add('border-transparent');
+                }
+            });
+        }
+
+        // Custom Photo Upload Handler
+        function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedAvatarType = 'photo';
+                    selectedAvatarValue = e.target.result;
+                    cardAvatarImage.src = e.target.result;
+                    cardAvatarImage.classList.remove('hidden');
+                    cardAvatarEmoji.classList.add('hidden');
+
+                    // Reset emoji highlights
+                    document.querySelectorAll('.avatar-option').forEach(btn => {
+                        btn.classList.remove('border-indigo-500');
+                        btn.classList.add('border-transparent');
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Get Vibe text based on mode and deterministic seed
+        function getVibeForLetter(letter, index, name) {
+            const letterUpper = letter.toUpperCase();
+            const dict = vibeDictionaries[currentMode] || vibeDictionaries.good;
+            const list = dict[letterUpper] || [`Unique Soul - অনন্য সাধারণ একজন মানুষ`];
+            const seed = name.charCodeAt(index % name.length) + index;
+            return list[seed % list.length];
+        }
+
+        // Main Vibe Generator function
+        function generateVibe(event) {
+            event.preventDefault();
+            const name = userNameInput.value.trim().toUpperCase();
+            if (!name) return;
+
+            const cardNameDisplay = document.getElementById('cardNameDisplay');
+            const vibeList = document.getElementById('vibeList');
+            const resultSection = document.getElementById('resultSection');
+            const modeBadge = document.getElementById('modeBadge');
+
+            cardNameDisplay.textContent = name;
+            vibeList.innerHTML = '';
+
+            // Update mode badge
+            if (currentMode === 'good') {
+                modeBadge.textContent = '😇 GOOD PERSONALITY VIBE';
+                modeBadge.className = 'text-xs font-bold tracking-widest text-indigo-300 uppercase bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20 mt-1';
+            } else if (currentMode === 'roast') {
+                modeBadge.textContent = '😈 HILARIOUS ROAST VIBE';
+                modeBadge.className = 'text-xs font-bold tracking-widest text-amber-400 uppercase bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 mt-1';
+            } else {
+                modeBadge.textContent = '💖 ROMANTIC LOVE VIBE';
+                modeBadge.className = 'text-xs font-bold tracking-widest text-pink-400 uppercase bg-pink-500/10 px-3 py-1 rounded-full border border-pink-500/20 mt-1';
+            }
+
+            // Generate items for each character
+            for (let i = 0; i < name.length; i++) {
+                const char = name[i];
+                const meaning = getVibeForLetter(char, i, name);
+
+                const itemHtml = `
+                    <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl p-3 backdrop-blur-sm transition-all hover:bg-white/10">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 font-extrabold text-xl flex items-center justify-center shrink-0">
+                            ${char}
+                        </div>
+                        <div class="text-sm md:text-base font-semibold text-slate-100">
+                            ${meaning}
+                        </div>
+                    </div>
+                `;
+                vibeList.innerHTML += itemHtml;
+            }
+
+            // Generate Dynamic QR Code inside the card
+            const qrContainer = document.getElementById("qrcode");
+            qrContainer.innerHTML = ""; // reset previous
+            new QRCode(qrContainer, {
+                text: window.location.href,
+                width: 42,
+                height: 42,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.L
+            });
+
+            // Show Result Section with pop-in animation reset
+            resultSection.classList.remove('hidden');
+            resultSection.classList.remove('animate-pop-in');
+            void resultSection.offsetWidth; // trigger reflow
+            resultSection.classList.add('animate-pop-in');
+
+            // Trigger Confetti Celebration Effect!
+            triggerConfetti();
+
+            // Smooth scroll down to result card
+            resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Trigger Colorful Confetti Cannon Effect
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 70,
+                    spread: 60,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+
+        // Theme Switcher Logic
+        function changeTheme(themeClass) {
+            const card = document.getElementById('vibeCard');
+            card.className = `${themeClass} border-2 rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-2xl transition-all duration-300`;
+        }
+
+        // Download Card as PNG Image using html2canvas
+        function downloadCard() {
+            const card = document.getElementById('vibeCard');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const name = userNameInput.value.trim().toUpperCase() || 'VIBE';
+
+            // Show loading state
+            downloadBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> তৈরি হচ্ছে...`;
+            downloadBtn.disabled = true;
+
+            html2canvas(card, {
+                scale: 2,
+                backgroundColor: null,
+                useCORS: true,
+                logging: false
+            }).then(canvas => {
+                const image = canvas.toDataURL("image/png");
+                const link = document.createElement('a');
+                link.href = image;
+                link.download = `${name}_NameVibe.png`;
+                link.click();
+
+                // Reset button
+                downloadBtn.innerHTML = `<i class="fa-solid fa-download"></i> ইমেজে ডাউনলোড`;
+                downloadBtn.disabled = false;
+            }).catch(err => {
+                console.error("Image export error:", err);
+                downloadBtn.innerHTML = `<i class="fa-solid fa-download"></i> ইমেজে ডাউনলোড`;
+                downloadBtn.disabled = false;
+            });
+        }
+
+        // One-click Direct Facebook Share
+        function shareToFacebook() {
+            const shareUrl = encodeURIComponent(window.location.href);
+            const fbShareDialog = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
+            window.open(fbShareDialog, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes');
+        }
+
+        // Share/Copy Link Logic
+        function shareLink() {
+            const currentUrl = window.location.href;
+            
+            // Clipboard Copying
+            const tempInput = document.createElement('input');
+            document.body.appendChild(tempInput);
+            tempInput.value = currentUrl;
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            // Show Toast
+            const toast = document.getElementById('toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
